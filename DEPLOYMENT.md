@@ -6,30 +6,25 @@ Le projet est configuré pour se déployer automatiquement sur Hostinger à chaq
 
 ### Configuration des Secrets GitHub
 
-1. Allez sur votre dépôt GitHub
-2. Cliquez sur **Settings** → **Secrets and variables** → **Actions**
-3. Cliquez sur **New repository secret** et ajoutez les secrets suivants :
+1. Allez sur votre dépôt GitHub : https://github.com/Yagiz243/cercle-atalanka/settings/secrets/actions
+2. Cliquez sur **New repository secret** et ajoutez les secrets suivants :
 
-#### Secrets à configurer :
+#### Secrets à configurer pour cercleatalanka.org :
 
-| Nom du secret | Description | Exemple |
-|---------------|-------------|---------|
-| FTP_SERVER | Adresse FTP de votre hébergement Hostinger | tp.votre-site.com |
-| FTP_USERNAME | Nom d'utilisateur FTP | u123456789 |
-| FTP_PASSWORD | Mot de passe FTP | otre_mot_de_passe_ftp |
-| FTP_SERVER_DIR | Dossier distant sur le serveur | /public_html |
+| Nom du secret | Valeur |
+|---------------|--------|
+| FTP_SERVER | tp.cercleatalanka.org |
+| FTP_USERNAME | u217103748.varsyagiz |
+| FTP_PASSWORD | arsVars20@ |
+| FTP_SERVER_DIR | /home/u217103748/domains/cercleatalanka.org/public_html |
 
-#### Comment trouver vos identifiants FTP Hostinger :
+### Comment configurer les secrets :
 
-1. Connectez-vous au panneau de contrôle Hostinger
-2. Allez dans **Hébergement** → **Gérer**
-3. Cliquez sur **Comptes FTP**
-4. Créez un nouveau compte FTP ou utilisez l'existant
-5. Copiez :
-   - **Hôte** → pour FTP_SERVER
-   - **Utilisateur** → pour FTP_USERNAME
-   - **Mot de passe** → pour FTP_PASSWORD
-   - **Dossier** → généralement /public_html pour FTP_SERVER_DIR
+1. Cliquez sur **New repository secret**
+2. Pour le **Name**, entrez le nom du secret (ex: FTP_SERVER)
+3. Pour le **Secret**, entrez la valeur correspondante
+4. Cliquez sur **Add secret**
+5. Répétez pour les 4 secrets
 
 ### Comment ça fonctionne
 
@@ -37,7 +32,7 @@ Le projet est configuré pour se déployer automatiquement sur Hostinger à chaq
 1. GitHub Actions construit automatiquement le projet (
 pm run build)
 2. Le contenu du dossier dist/ est uploadé via FTP sur Hostinger
-3. Le site est mis à jour automatiquement
+3. Le site est mis à jour automatiquement sur cercleatalanka.org
 
 ### Vérifier le déploiement
 
@@ -50,7 +45,14 @@ pm run build)
 
 ## Déploiement Manuel (Alternative)
 
-Si vous préférez déployer manuellement :
+Si vous préférez déployer manuellement via FTP :
+
+### Identifiants FTP pour cercleatalanka.org
+
+- **Hôte** : tp.cercleatalanka.org
+- **Utilisateur** : u217103748.varsyagiz
+- **Mot de passe** : arsVars20@
+- **Dossier distant** : /home/u217103748/domains/cercleatalanka.org/public_html
 
 ### Étape 1 : Construire le projet
 
@@ -62,13 +64,11 @@ npm run build
 
 Cela crée le dossier dist/ contenant tous les fichiers optimisés pour la production.
 
-### Étape 2 : Uploader sur Hostinger
-
-#### Option A : Via FTP
+### Étape 2 : Uploader via FTP
 
 1. Utilisez un client FTP (FileZilla, WinSCP, etc.)
-2. Connectez-vous avec vos identifiants FTP Hostinger
-3. Naviguez vers le dossier public_html (ou le sous-dossier si applicable)
+2. Connectez-vous avec les identifiants ci-dessus
+3. Naviguez vers /home/u217103748/domains/cercleatalanka.org/public_html
 4. Uploadez tout le contenu du dossier dist/ :
    - index.html
    - ssets/ (dossier complet)
@@ -79,35 +79,14 @@ Cela crée le dossier dist/ contenant tous les fichiers optimisés pour la produ
    - obots.txt
    - sitemap.xml
 
-#### Option B : Via le Gestionnaire de fichiers Hostinger
-
-1. Connectez-vous au panneau de contrôle Hostinger
-2. Ouvrez le "Gestionnaire de fichiers"
-3. Naviguez vers public_html
-4. Uploadez tous les fichiers du dossier dist/
-
 ### Étape 3 : Vérifier le déploiement
 
-1. Ouvrez votre site dans un navigateur
+1. Ouvrez https://cercleatalanka.org dans un navigateur
 2. Vérifiez que :
    - La page d'accueil s'affiche correctement
    - Les images chargent (logo, hero-bg, ikaye)
    - La navigation fonctionne
    - Le favicon s'affiche dans l'onglet
-
-## Configuration si le site est dans un sous-dossier
-
-Si votre site est hébergé dans un sous-dossier (ex: https://votre-site.com/cercle-atalanka/), modifiez ite.config.ts :
-
-`	ypescript
-export default defineConfig({
-  base: '/cercle-atalanka/', // Ajoutez cette ligne
-  // ... le reste de la configuration
-})
-`
-
-Puis reconstruisez avec 
-pm run build et mettez à jour FTP_SERVER_DIR dans les secrets GitHub.
 
 ## Fichiers à NE PAS uploader
 
