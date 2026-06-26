@@ -168,7 +168,7 @@ export function About() {
                   <div className="relative">
                     <div className="w-40 h-40 md:w-56 md:h-56 rounded-full bg-gradient-to-br from-primary via-violet to-secondary p-1">
                       <img
-                        src="../../public/ikaye.jpg"
+                        src="/ikaye.jpg"
                         alt="Maître Atalanka"
                         className="w-full h-full rounded-full object-cover"
                       />
