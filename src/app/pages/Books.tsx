@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router';
-import { ShoppingCart, Star, Search, Filter } from 'lucide-react';
+import { Star, Search, Filter } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent } from '../components/ui/Card';
 import { Input } from '../components/ui/Input';
-import { useCart } from '../context/CartContext';
 import { fetchBooks } from '../lib/content';
 import { Book } from '../lib/types';
 import { formatPrice } from '../lib/utils';
@@ -16,7 +15,6 @@ export function Books() {
   const [books, setBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const { addToCart } = useCart();
 
   useEffect(() => {
     let isActive = true;
@@ -183,20 +181,11 @@ export function Books() {
                     <span className="text-xl font-bold text-secondary">
                       {formatPrice(book.price)}
                     </span>
-                    <div className="flex gap-2">
-                      <Link to={`/books/${book.id}`}>
-                        <Button variant="outline" size="sm">
-                          Voir
-                        </Button>
-                      </Link>
-                      <Button
-                        variant="primary"
-                        size="sm"
-                        onClick={() => addToCart(book, 'book')}
-                      >
-                        <ShoppingCart className="h-4 w-4" />
+                    <Link to={`/books/${book.id}`}>
+                      <Button variant="primary" size="sm">
+                        Voir
                       </Button>
-                    </div>
+                    </Link>
                   </div>
                 </CardContent>
               </Card>

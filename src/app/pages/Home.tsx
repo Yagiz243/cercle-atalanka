@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router';
-import { BookOpen, Video, Users, Star, ArrowRight, Sparkles } from 'lucide-react';
+import { BookOpen, Video, Users, Star, ArrowRight } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent } from '../components/ui/Card';
 import { fetchBooks, fetchTeachings } from '../lib/content';
 import { Book, Teaching } from '../lib/types';
 import { formatPrice } from '../lib/utils';
+import heroBg from '../../../public/hero-bg.jpg'; // 👈 IMPORT DE L'IMAGE
 
 export function Home() {
   const [featuredBooks, setFeaturedBooks] = useState<Book[]>([]);
@@ -20,9 +21,7 @@ export function Home() {
         setError('');
         const [books, teachings] = await Promise.all([fetchBooks(), fetchTeachings()]);
 
-        if (!isActive) {
-          return;
-        }
+        if (!isActive) return;
 
         const latestTeachings = [...teachings]
           .sort((left, right) => new Date(right.createdAt).getTime() - new Date(left.createdAt).getTime())
@@ -87,40 +86,41 @@ export function Home() {
         </div>
       )}
 
-      <section className="relative h-[600px] flex items-center overflow-hidden">
+      {/* Hero section responsive */}
+      <section className="relative min-h-[70vh] md:min-h-[600px] flex items-center overflow-hidden py-8 md:py-0">
         <div
           className="absolute inset-0 bg-cover bg-center bg-no-repeat"
           style={{
-            backgroundImage: 'url(src/imports/hero-bg.jpg)',
+            backgroundImage: `url(${heroBg})`,
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-slate-900/95 via-slate-800/90 to-slate-900/70"></div>
         </div>
 
         <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-12 items-center">
             <div className="text-white">
-              <p className="text-sm md:text-base tracking-[0.3em] mb-6 text-secondary uppercase font-light">
+              <p className="text-xs md:text-base tracking-[0.3em] mb-3 md:mb-6 text-secondary uppercase font-light">
                 Spiritualité • Éveil • Méditation • Transformation
               </p>
-              <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              <h1 className="text-4xl md:text-7xl font-bold mb-3 md:mb-6 leading-tight">
                 Cercle<br />Atalanka
               </h1>
-              <div className="flex flex-col sm:flex-row gap-4 mt-8">
-                <Link to="/books">
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 mt-4 md:mt-8">
+                <Link to="/books" className="w-full sm:w-auto">
                   <Button
                     variant="primary"
                     size="lg"
-                    className="bg-white text-slate-900 hover:bg-white/90"
+                    className="bg-white text-slate-900 hover:bg-white/90 w-full sm:w-auto"
                   >
                     Découvrir notre collection
                   </Button>
                 </Link>
-                <Link to="/about">
+                <Link to="/about" className="w-full sm:w-auto">
                   <Button
                     variant="outline"
                     size="lg"
-                    className="border-2 border-secondary text-secondary hover:bg-secondary hover:text-white"
+                    className="border-2 border-secondary text-secondary hover:bg-secondary hover:text-white w-full sm:w-auto"
                   >
                     En savoir plus
                   </Button>
@@ -128,7 +128,7 @@ export function Home() {
               </div>
             </div>
 
-            <div className="text-white">
+            <div className="text-white hidden lg:block">
               <div className="bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-8">
                 <h2 className="text-2xl md:text-3xl font-semibold mb-4 italic">
                   "Découvrez le potentiel de chaque être spirituel"
@@ -142,6 +142,7 @@ export function Home() {
         </div>
       </section>
 
+      {/* Section 3 cartes */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -193,6 +194,7 @@ export function Home() {
         </div>
       </section>
 
+      {/* Livres en vedette */}
       <section className="py-16 bg-muted/30">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
@@ -242,6 +244,7 @@ export function Home() {
         </div>
       </section>
 
+      {/* Enseignements */}
       <section className="py-16 bg-background">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
@@ -315,6 +318,7 @@ export function Home() {
         </div>
       </section>
 
+      {/* Call to action */}
       <section className="py-20 bg-gradient-to-br from-violet/10 via-primary/10 to-accent/10">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-4xl font-bold mb-4">Prêt à commencer votre voyage?</h2>

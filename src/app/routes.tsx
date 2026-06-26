@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router';
+﻿import { createBrowserRouter } from 'react-router';
 import { MainLayout } from './components/layout/MainLayout';
 import { ProtectedRoute } from './components/auth/ProtectedRoute';
 import { Home } from './pages/Home';
@@ -8,6 +8,9 @@ import { BookDetail } from './pages/BookDetail';
 import { Teachings } from './pages/Teachings';
 import { TeachingDetail } from './pages/TeachingDetail';
 import { Community } from './pages/Community';
+import { FAQ } from './pages/FAQ';
+import { TermsOfService } from './pages/TermsOfService';
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
 import { Cart } from './pages/Cart';
@@ -31,7 +34,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     Component: MainLayout,
-    errorElement: <div className="p-6 text-red-500">Erreur sur la page principale</div>, // 👈 AJOUT
+    errorElement: <div className="p-6 text-red-500">Erreur sur la page principale</div>,
     children: [
       { index: true, Component: Home },
       { path: 'about', Component: About },
@@ -40,6 +43,9 @@ export const router = createBrowserRouter([
       { path: 'teachings', Component: Teachings },
       { path: 'teachings/:id', Component: TeachingDetail },
       { path: 'community', Component: Community },
+      { path: 'faq', Component: FAQ },
+      { path: 'terms', Component: TermsOfService },
+      { path: 'privacy', Component: PrivacyPolicy },
       { path: 'login', Component: Login },
       { path: 'register', Component: Register },
       { path: 'cart', Component: Cart },
@@ -51,7 +57,7 @@ export const router = createBrowserRouter([
             <Dashboard />
           </ProtectedRoute>
         ),
-        errorElement: <div className="p-6 text-red-500">Erreur dans le tableau de bord utilisateur</div>, // 👈 AJOUT
+        errorElement: <div className="p-6 text-red-500">Erreur dans le tableau de bord utilisateur</div>,
         children: [
           { index: true, Component: DashboardOverview },
           { path: 'purchases', Component: DashboardPurchases },
@@ -73,7 +79,7 @@ export const router = createBrowserRouter([
         <AdminDashboard />
       </ProtectedRoute>
     ),
-    errorElement: <div className="p-6 text-red-500">Erreur dans l'interface admin</div>, // 👈 AJOUT
+    errorElement: <div className="p-6 text-red-500">Erreur dans l'interface admin</div>,
     children: [
       { index: true, Component: AdminOverview },
       { path: 'books', Component: AdminBooks },

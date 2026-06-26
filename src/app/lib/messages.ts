@@ -13,7 +13,6 @@ function assertConfigured() {
   }
 }
 
-// Conversion directe depuis la ligne de la base
 function mapMessageRow(row: MessageRow): Message {
   return {
     id: row.id,
@@ -91,15 +90,20 @@ export async function markConversationAsRead(userId: string) {
 export async function sendAdminReply(userId: string, content: string) {
   assertConfigured();
 
-  // Récupérer les infos de l'admin (pour son nom/avatar)
+  // Récupérer l'utilisateur connecté (admin)
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (userError || !user) {
+    throw new Error('Impossible de récupérer l\'utilisateur connecté.');
+  }
+
+  // Récupérer son profil
   const { data: adminProfile, error: profileError } = await supabase
     .from('profiles')
     .select('full_name, avatar_url')
-    .eq('id', (await supabase.auth.getUser()).data.user.id)
-    .single();
+    .eq('id', user.id)
+    .maybeSingle();
 
-  if (profileError) throw profileError;
-
+  // Fallback en cas d'absence de profil ou d'erreur
   const adminName = adminProfile?.full_name || 'Administrateur';
   const adminAvatar = adminProfile?.avatar_url || DEFAULT_ADMIN_AVATAR;
 
@@ -125,7 +129,6 @@ export async function deleteConversation(userId: string) {
   assertConfigured();
 
   // ⚠️ Supprime tous les messages d'un utilisateur – à utiliser avec précaution
-  // Si vous voulez empêcher la suppression, retirez cette fonction ou désactivez son appel.
   const { error } = await supabase
     .from('messages')
     .delete()

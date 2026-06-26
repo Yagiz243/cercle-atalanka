@@ -1,22 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router';
-import { Star, ShoppingCart, BookOpen, Download, ArrowLeft, Share2 } from 'lucide-react';
+import { Star, BookOpen, Download, ArrowLeft, Share2, ShoppingBag } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card, CardContent } from '../components/ui/Card';
-import { useCart } from '../context/CartContext';
-import { useAuth } from '../context/AuthContext';
 import { fetchBookById, fetchBooks } from '../lib/content';
 import { Book } from '../lib/types';
-import { hasPurchasedItem } from '../lib/purchases';
 import { formatPrice } from '../lib/utils';
 
 export function BookDetail() {
   const { id } = useParams();
-  const { addToCart } = useCart();
-  const { isAuthenticated, user } = useAuth();
   const [selectedTab, setSelectedTab] = useState<'description' | 'reviews'>('description');
-  const [hasAccess, setHasAccess] = useState(false);
-  const [isCheckingAccess, setIsCheckingAccess] = useState(true);
   const [book, setBook] = useState<Book | null>(null);
   const [relatedBooks, setRelatedBooks] = useState<Book[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -37,14 +30,14 @@ export function BookDetail() {
         setError('');
         const [currentBook, allBooks] = await Promise.all([fetchBookById(id), fetchBooks()]);
 
-        if (!isActive) {
-          return;
-        }
+        if (!isActive) return;
 
         setBook(currentBook);
         setRelatedBooks(
           currentBook
-            ? allBooks.filter((candidate) => candidate.id !== currentBook.id && candidate.category === currentBook.category).slice(0, 3)
+            ? allBooks
+                .filter((candidate) => candidate.id !== currentBook.id && candidate.category === currentBook.category)
+                .slice(0, 3)
             : [],
         );
       } catch (loadError) {
@@ -64,51 +57,6 @@ export function BookDetail() {
       isActive = false;
     };
   }, [id]);
-
-  useEffect(() => {
-    if (!book) {
-      return;
-    }
-
-    if (!book.isPremium) {
-      setHasAccess(true);
-      setIsCheckingAccess(false);
-      return;
-    }
-
-    if (!isAuthenticated) {
-      setHasAccess(false);
-      setIsCheckingAccess(false);
-      return;
-    }
-
-    let isActive = true;
-
-    const checkAccess = async () => {
-      try {
-        const purchased = await hasPurchasedItem('book', book.id);
-
-        if (isActive) {
-          setHasAccess(purchased);
-        }
-      } catch (error) {
-        console.error('Error checking book access:', error);
-        if (isActive) {
-          setHasAccess(false);
-        }
-      } finally {
-        if (isActive) {
-          setIsCheckingAccess(false);
-        }
-      }
-    };
-
-    void checkAccess();
-
-    return () => {
-      isActive = false;
-    };
-  }, [book, isAuthenticated, user?.id]);
 
   if (!isLoading && !book) {
     return (
@@ -162,6 +110,9 @@ export function BookDetail() {
   if (!book) {
     return null;
   }
+
+  // Le lien Chariow est stocké dans book.pdfUrl (ou vous pouvez ajouter un champ book.chariowLink)
+  const chariowLink = book.pdfUrl || '#';
 
   return (
     <div className="w-full">
@@ -228,21 +179,23 @@ export function BookDetail() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4 mb-6">
-                  {hasAccess ? (
-                    <Button variant="accent" size="lg" className="flex-1">
-                      <Download className="h-5 w-5 mr-2" />
-                      Telecharger le livre
-                    </Button>
-                  ) : (
-                    <Button
-                      variant="primary"
-                      size="lg"
+                  {/* Bouton qui redirige vers Chariow */}
+                  {chariowLink && chariowLink !== '#' ? (
+                    <a
+                      href={chariowLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="flex-1"
-                      onClick={() => addToCart(book, 'book')}
-                      disabled={isCheckingAccess}
                     >
-                      <ShoppingCart className="h-5 w-5 mr-2" />
-                      {isCheckingAccess ? 'Verification...' : 'Ajouter au panier'}
+                      <Button variant="accent" size="lg" className="w-full">
+                        <ShoppingBag className="h-5 w-5 mr-2" />
+                        Obtenir le livre
+                      </Button>
+                    </a>
+                  ) : (
+                    <Button variant="accent" size="lg" className="flex-1" disabled>
+                      <Download className="h-5 w-5 mr-2" />
+                      Lien non disponible
                     </Button>
                   )}
                   <Button variant="outline" size="lg">
@@ -251,18 +204,14 @@ export function BookDetail() {
                   </Button>
                 </div>
 
-                {book.isPremium && hasAccess && (
-                  <p className="mb-6 text-sm text-accent">Ce livre premium est deja accessible depuis votre compte.</p>
-                )}
-
                 <div className="bg-accent/10 rounded-lg p-4 space-y-2">
                   <div className="flex items-center space-x-2 text-sm">
                     <BookOpen className="h-4 w-4 text-accent" />
-                    <span>Format PDF téléchargeable</span>
+                    <span>Format PDF numérique</span>
                   </div>
                   <div className="flex items-center space-x-2 text-sm">
-                    <Download className="h-4 w-4 text-accent" />
-                    <span>Accès immédiat après achat</span>
+                    <ShoppingBag className="h-4 w-4 text-accent" />
+                    <span>Achat sécurisé via Chariow</span>
                   </div>
                 </div>
               </div>
@@ -315,7 +264,7 @@ export function BookDetail() {
                   </div>
                 ) : (
                   <div className="space-y-6">
-                    {reviews.map(review => (
+                    {reviews.map((review) => (
                       <div key={review.id} className="border-b border-border pb-6 last:border-0">
                         <div className="flex items-start space-x-4">
                           <img
@@ -358,7 +307,7 @@ export function BookDetail() {
               <CardContent className="p-6">
                 <h3 className="font-semibold mb-4">Livres similaires</h3>
                 <div className="space-y-4">
-                  {relatedBooks.map(relatedBook => (
+                  {relatedBooks.map((relatedBook) => (
                     <Link key={relatedBook.id} to={`/books/${relatedBook.id}`}>
                       <div className="flex space-x-3 hover:bg-muted/50 p-2 rounded-lg transition-colors cursor-pointer">
                         <img
