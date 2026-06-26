@@ -13,10 +13,15 @@ export function Header() {
       <div className='container mx-auto px-4'>
         <div className='flex h-16 items-center justify-between'>
           <Link to='/' className='flex items-center space-x-2'>
+            {/* Logo avec rounded-full */}
             <div className='h-12 w-12 rounded-full bg-gradient-to-br from-primary via-secondary to-violet flex items-center justify-center overflow-hidden'>
-              <img src='../../../../public/logo.png' alt='Cercle Atalanka' className='w-full h-full object-cover' />
+              <img
+                src='/logo.png'
+                alt='Cercle Atalanka'
+                className='w-full h-full object-cover'
+              />
             </div>
-            <span className='font-bold text-xl'></span>
+            <span className='font-bold text-xl text-foreground'>Cercle Atalanka</span>
           </Link>
 
           <nav className='hidden md:flex items-center space-x-6'>
@@ -25,7 +30,7 @@ export function Header() {
               <span>Accueil</span>
             </Link>
             <Link to='/about' className='text-foreground hover:text-primary transition-colors'>
-              Ã€ propos
+              À propos
             </Link>
             <Link to='/books' className='flex items-center space-x-1 text-foreground hover:text-primary transition-colors'>
               <BookOpen className='h-4 w-4' />
@@ -37,7 +42,7 @@ export function Header() {
             </Link>
             <Link to='/community' className='flex items-center space-x-1 text-foreground hover:text-primary transition-colors'>
               <Users className='h-4 w-4' />
-              <span>CommunautÃ©</span>
+              <span>Communauté</span>
             </Link>
           </nav>
 
