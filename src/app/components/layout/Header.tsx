@@ -21,7 +21,7 @@ export function Header() {
                 className='w-full h-full object-cover'
               />
             </div>
-            <span className='font-bold text-xl text-foreground'>Cercle Atalanka</span>
+            <span className='font-bold text-xl text-foreground'></span>
           </Link>
 
           <nav className='hidden md:flex items-center space-x-6'>
